@@ -64,6 +64,7 @@ run().catch(console.dir);
 const database = client.db("priorityPilotDB");
 // Database::Collection
 const usersCollection = database.collection("users");
+const taskCollection = database.collection("task");
 
 // Auth related api
 app.post("/jwt", async (req, res) => {
@@ -93,8 +94,20 @@ app.get('/users',async(req,res)=>{
   }
 })
 
+// get all task
+app.get('/task',async(req,res)=>{
+  try {
+    const result = await taskCollection.find().toArray()
+    res.send(result)
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
+
 
 //post method
+
 app.post("/users", async (req, res) => {
   try {
     const user = req.body;
@@ -102,6 +115,18 @@ app.post("/users", async (req, res) => {
     res.send(result);
   } catch (error) {}
 });
+
+// task:post method
+app.post('/task',async(req,res)=>{
+  try {
+    const task = req.body
+    const result = await taskCollection.insertOne(task)
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
 //put method
 
 //delete method
