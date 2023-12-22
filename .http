@@ -1,7 +1,13 @@
-POST http://localhost:5000/users HTTP/1.1
+POST http://localhost:5000/tasks HTTP/1.1
 content-type: application/json
 
 {
-    "name": "sample",
-    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
-}
+    "title": "Design homepage",
+    "description": "Create an exciting new homepage design",
+    "status": "ongoing",
+    "priority": "low",
+    "deadline_date": "2023-03-15",
+    "deadline_time": "17:30", 
+    "createdBy": "23472834",
+    "assignedTo": ["23472834", "1234839"]
+  }
