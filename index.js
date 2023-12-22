@@ -104,6 +104,32 @@ app.get('/tasks',async(req,res)=>{
     
   }
 })
+app.get('/tasks/:status',async(req,res)=>{
+  try {
+    const type = req.params.status
+    console.log(type);
+    const query = { status: type};
+    let result;
+    if(type.toLowerCase().trim() === 'todo'){
+       result = await tasksCollection.find(query).toArray()
+    }
+    if(type.toLowerCase().trim() === 'ongoing'){
+       result = await tasksCollection.find(query).toArray()
+    }
+    if(type.toLowerCase().trim() === 'complete'){
+       result = await tasksCollection.find(query).toArray()
+    }
+    // if(type.toLowerCase().trim() === ''){
+    //    result = await tasksCollection.find().toArray()
+    // }
+  
+
+    res.send(result)
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
 
 
 //post method
