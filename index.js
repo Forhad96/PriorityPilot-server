@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 // middleware
 app.use(
   cors({
-    origin: ["https://bookify007.web.app", "http://localhost:5173"],
+    origin: ["https://priority-pilot-1.web.app", "http://localhost:5173"],
     credentials: true,
   })
 );
@@ -64,7 +64,7 @@ run().catch(console.dir);
 const database = client.db("priorityPilotDB");
 // Database::Collection
 const usersCollection = database.collection("users");
-const taskCollection = database.collection("task");
+const tasksCollection = database.collection("tasks");
 
 // Auth related api
 app.post("/jwt", async (req, res) => {
@@ -94,10 +94,10 @@ app.get('/users',async(req,res)=>{
   }
 })
 
-// get all task
-app.get('/task',async(req,res)=>{
+// get all tasks
+app.get('/tasks',async(req,res)=>{
   try {
-    const result = await taskCollection.find().toArray()
+    const result = await tasksCollection.find().toArray()
     res.send(result)
   } catch (error) {
     console.log(error);
@@ -116,11 +116,11 @@ app.post("/users", async (req, res) => {
   } catch (error) {}
 });
 
-// task:post method
-app.post('/task',async(req,res)=>{
+// tasks:post method
+app.post('/tasks',async(req,res)=>{
   try {
     const task = req.body
-    const result = await taskCollection.insertOne(task)
+    const result = await tasksCollection.insertOne(task)
     console.log(result);
   } catch (error) {
     console.log(error);
