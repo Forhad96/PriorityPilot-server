@@ -16,7 +16,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.shhvx1o.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -84,53 +84,47 @@ app.post("/jwt", async (req, res) => {
 });
 
 // Get method
-app.get('/users',async(req,res)=>{
+app.get("/users", async (req, res) => {
   try {
-    const result = await usersCollection.find().toArray()
-    res.send(result)
+    const result = await usersCollection.find().toArray();
+    res.send(result);
   } catch (error) {
     console.log(error);
-    
   }
-})
+});
 
 // get all tasks
-app.get('/tasks',async(req,res)=>{
+app.get("/tasks", async (req, res) => {
   try {
-    const result = await tasksCollection.find().toArray()
-    res.send(result)
+    const result = await tasksCollection.find().toArray();
+    res.send(result);
   } catch (error) {
     console.log(error);
-    
   }
-})
-app.get('/tasks/:status',async(req,res)=>{
+});
+app.get("/tasks/:status", async (req, res) => {
   try {
-    const type = req.params.status
-    console.log(type);
-    const query = { status: type};
+    const type = req.params.status;
+    const query = { status: type };
     let result;
-    if(type.toLowerCase().trim() === 'todo'){
-       result = await tasksCollection.find(query).toArray()
+    if (type.toLowerCase().trim() === "todo") {
+      result = await tasksCollection.find(query).toArray();
     }
-    if(type.toLowerCase().trim() === 'ongoing'){
-       result = await tasksCollection.find(query).toArray()
+    if (type.toLowerCase().trim() === "ongoing") {
+      result = await tasksCollection.find(query).toArray();
     }
-    if(type.toLowerCase().trim() === 'complete'){
-       result = await tasksCollection.find(query).toArray()
+    if (type.toLowerCase().trim() === "complete") {
+      result = await tasksCollection.find(query).toArray();
     }
-    // if(type.toLowerCase().trim() === ''){
-    //    result = await tasksCollection.find().toArray()
-    // }
-  
+    if (type.toLowerCase().trim() === "all") {
+      result = await tasksCollection.find().toArray();
+    }
 
-    res.send(result)
+    res.send(result);
   } catch (error) {
     console.log(error);
-    
   }
-})
-
+});
 
 //post method
 
@@ -143,19 +137,44 @@ app.post("/users", async (req, res) => {
 });
 
 // tasks:post method
-app.post('/tasks',async(req,res)=>{
+app.post("/tasks", async (req, res) => {
   try {
-    const task = req.body
-    const result = await tasksCollection.insertOne(task)
+    const task = req.body;
+    const result = await tasksCollection.insertOne(task);
     console.log(result);
+    res.send(result);
   } catch (error) {
     console.log(error);
-    
   }
-})
+});
 //put method
-
+app.put("/tasks/:id", async (req, res) => {
+  try {
+    const {newStatus} = req.body;
+    const query = { _id: new ObjectId(req.params.id) };
+    const updateDoc = { $set: { status: newStatus } };
+    // const result = await tasksCollection.findOneAndUpdate(
+    //   { _id: new ObjectId(req.params.id) },
+    //   { $set: { status: newStatus } },
+    //   { returnDocument: "after" }
+    // );
+    const result = await tasksCollection.updateOne(query,updateDoc)
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 //delete method
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(req.params.id) };
+    const result = await tasksCollection.deleteOne(query);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("priority Pilot server is running ");

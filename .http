@@ -1,13 +1,13 @@
 POST http://localhost:5000/tasks HTTP/1.1
 content-type: application/json
 
-{
-    "title": "Design homepage",
-    "description": "Create an exciting new homepage design",
-    "status": "ongoing",
-    "priority": "low",
-    "deadline_date": "2023-03-15",
-    "deadline_time": "17:30", 
-    "createdBy": "23472834",
-    "assignedTo": ["23472834", "1234839"]
+ {
+    "title": "Review content draft", 
+    "description": "Review the 2nd draft of the website content",
+    "status": "complete",
+    "priority": "moderate",
+    "deadline_date": "2023-03-09",
+    "deadline_time": "09:00",  
+    "createdBy": "1234839",
+    "assignedTo": ["8743289"]
   }
