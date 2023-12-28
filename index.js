@@ -94,14 +94,14 @@ app.get("/users", async (req, res) => {
 });
 
 // get all tasks
-app.get("/tasks", async (req, res) => {
-  try {
-    const result = await tasksCollection.find().toArray();
-    res.send(result);
-  } catch (error) {
-    console.log(error);
-  }
-});
+// app.get("/tasks", async (req, res) => {
+//   try {
+//     const result = await tasksCollection.find().toArray();
+//     res.send(result);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 app.get("/tasks/:status", async (req, res) => {
   try {
     const type = req.params.status;
@@ -125,6 +125,18 @@ app.get("/tasks/:status", async (req, res) => {
     console.log(error);
   }
 });
+
+app.get("/task/:id", async (req, res) => {
+  try {
+const query = {_id:new ObjectId(req.params.id)}
+    const result = await tasksCollection.findOne(query)
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 
 //post method
 
