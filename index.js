@@ -84,6 +84,36 @@ app.post("/jwt", async (req, res) => {
 });
 
 // Get method
+
+// get Statistics data
+app.get('/adminStatistics',async(req,res)=>{
+  try {
+    const statistics ={
+      allData:0,
+      totalTodo: 0,
+      totalOngoing: 0,
+      totalComplete:0
+    }
+  // const query ={status:}
+statistics.allData = await tasksCollection.estimatedDocumentCount()
+  statistics.totalTodo = await tasksCollection
+  .countDocuments({ status: "todo" })
+  statistics.totalOngoing = await tasksCollection
+  .countDocuments({ status: "ongoing" })
+  statistics.totalComplete = await tasksCollection
+  .countDocuments({ status: "complete" })
+
+res.send(statistics)
+
+
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
+
+
+// get users data 
 app.get("/users", async (req, res) => {
   try {
     const result = await usersCollection.find().toArray();
@@ -126,6 +156,10 @@ app.get("/tasks/:status", async (req, res) => {
   }
 });
 
+
+
+
+//get single api
 app.get("/task/:id", async (req, res) => {
   try {
 const query = {_id:new ObjectId(req.params.id)}
@@ -160,9 +194,9 @@ app.post("/tasks", async (req, res) => {
   }
 });
 //put method
-app.put("/tasks/:id", async (req, res) => {
+app.put("/tasksStatus/:id", async (req, res) => {
   try {
-    const {newStatus} = req.body;
+    const { newStatus } = req.body;
     const query = { _id: new ObjectId(req.params.id) };
     const updateDoc = { $set: { status: newStatus } };
     // const result = await tasksCollection.findOneAndUpdate(
@@ -170,16 +204,35 @@ app.put("/tasks/:id", async (req, res) => {
     //   { $set: { status: newStatus } },
     //   { returnDocument: "after" }
     // );
-    const result = await tasksCollection.updateOne(query,updateDoc)
+    const result = await tasksCollection.updateOne(query, updateDoc);
     res.send(result);
   } catch (error) {
     console.log(error);
   }
 });
+
+// api for update task
+app.put("/tasks/:id", async (req, res) => {
+  try {
+    const doc = req.body;
+    const query = { _id: new ObjectId(req.params.id) };
+    const updateDoc = {
+      $set: { ...doc },
+    };
+    const result = await tasksCollection.updateOne(query, updateDoc);
+
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// 
 //delete method
 app.delete("/tasks/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    console.log(id);
     const query = { _id: new ObjectId(req.params.id) };
     const result = await tasksCollection.deleteOne(query);
     res.send(result);
