@@ -171,6 +171,16 @@ const query = {_id:new ObjectId(req.params.id)}
 });
 
 
+app.get('/isTrash',async(req,res)=>{
+  try {
+    const query = {isTrash:'yes'}
+    const result = await tasksCollection.find(query).toArray()
+    res.send(result)
+  } catch (error) {
+    console.log(err);
+    
+  }
+})
 
 //post method
 
