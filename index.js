@@ -251,6 +251,21 @@ app.delete("/tasks/:id", async (req, res) => {
   }
 });
 
+//Delete multiple item
+
+app.delete('/deleteMultiple',async(req,res)=>{
+  try {
+    const {ids} = req.body
+    console.log(ids);
+    const query = {_id:{$in:ids.map(id=>new ObjectId(id))}}
+    const result = await tasksCollection.deleteOne(query)
+    res.send(result)
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
+
 app.get("/", (req, res) => {
   res.send("priority Pilot server is running ");
 });
