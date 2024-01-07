@@ -237,6 +237,27 @@ app.put("/tasks/:id", async (req, res) => {
   }
 });
 
+
+
+// api for move to trash
+app.put('/moveToTrash',async(req,res)=>{
+  try {
+    const query = {_id: new ObjectId(req.body.id)}
+    const updateDoc = {
+      $set: {
+        isTrash: "yes",
+      },
+    };
+
+    const result = await tasksCollection.updateOne(query,updateDoc)
+    res.send(result)
+
+    console.log(query);
+  } catch (error) {
+    console.log(error);
+    
+  }
+})
 // 
 //delete method
 app.delete("/tasks/:id", async (req, res) => {
