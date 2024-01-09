@@ -135,7 +135,7 @@ app.get("/users", async (req, res) => {
 app.get("/tasks/:status", async (req, res) => {
   try {
     const type = req.params.status;
-    const query = { status: type };
+    const query = { status: type, isTrash:'no' };
     let result;
     if (type.toLowerCase().trim() === "todo") {
       result = await tasksCollection.find(query).toArray();
@@ -147,7 +147,9 @@ app.get("/tasks/:status", async (req, res) => {
       result = await tasksCollection.find(query).toArray();
     }
     if (type.toLowerCase().trim() === "all") {
-      result = await tasksCollection.find().toArray();
+      result = await tasksCollection
+        .find({ isTrash: "no" })
+        .toArray();
     }
 
     res.send(result);
@@ -258,6 +260,27 @@ app.put('/moveToTrash',async(req,res)=>{
     
   }
 })
+
+// api for restore form trash
+app.put('/taskRestore',async(req,res)=>{
+   try {
+     const query = { _id: new ObjectId(req.body.id) };
+     const updateDoc = {
+       $set: {
+         isTrash: "no",
+       },
+     };
+
+     const result = await tasksCollection.updateOne(query, updateDoc);
+     res.send(result);
+
+     console.log(query);
+   } catch (error) {
+     console.log(error);
+   }
+})
+
+
 // 
 //delete method
 app.delete("/tasks/:id", async (req, res) => {
